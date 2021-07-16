@@ -48,7 +48,7 @@ email:  dtarb@usu.edu
 // noDatarefactor 11/18/17  apparrently both functions are needed so that sometimes a no data pointer can be input and sometimes a nodata value
 tdpartition *CreateNewPartition(DATA_TYPE datatype, long totalx, long totaly, double dxA, double dyA, double nodata){
 	//Takes a double as the nodata parameter to accommodate double returns from GDAL through tiffIO
-	//Modification occures downstream. Expected -0.1f has been swapped with MISSINGFLOAT which == MAXFLOAT *-1; Ref issue #228
+	//Modification occures downstream. Expected -1.0f has been swapped with MISSINGFLOAT which == MAXFLOAT *-1; Ref issue #228
 	//typecasting below may break as MISSINGFLOAT is of type double and is 2's compliment; May not convert to anything below 64 bits.
 	//Be on guard for overflow errors
 	tdpartition* ptr = NULL;
