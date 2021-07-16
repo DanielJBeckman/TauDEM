@@ -149,7 +149,7 @@ int aread8( char* pfile, char* afile, char *datasrc, char *lyrname,int uselyrnam
 
 	//Create empty partition to store new information
 	tdpartition *aread8;
-	aread8 = CreateNewPartition(FLOAT_TYPE, totalX, totalY, dxA, dyA, -1.0f); // modified by Nazmus
+	aread8 = CreateNewPartition(FLOAT_TYPE, totalX, totalY, dxA, dyA, MISSINGFLOAT); // modified by DanielJbeckman, ref# issue #228
 
 	// con is used to check for contamination at the edges
 	long i,j;
@@ -266,7 +266,7 @@ int aread8( char* pfile, char* afile, char *datasrc, char *lyrname,int uselyrnam
 	double computet = MPI_Wtime();
 
 	//Create and write TIFF file
-	float aNodata = -1.0f;
+	float aNodata = MISSINGFLOAT; //Modifyied by DanielJBeckman Ref issue #228; This new value of MISSINGFLOAT originates in commonLib.h 
 	tiffIO a(afile, FLOAT_TYPE, aNodata, p);
 	a.write(xstart, ystart, ny, nx, aread8->getGridPointer());
 	double writet = MPI_Wtime();

@@ -48,7 +48,9 @@ email:  dtarb@usu.edu
 // noDatarefactor 11/18/17  apparrently both functions are needed so that sometimes a no data pointer can be input and sometimes a nodata value
 tdpartition *CreateNewPartition(DATA_TYPE datatype, long totalx, long totaly, double dxA, double dyA, double nodata){
 	//Takes a double as the nodata parameter to accommodate double returns from GDAL through tiffIO
-
+	//Modification occures downstream. Expected -0.1f has been swapped with MISSINGFLOAT which == MAXFLOAT *-1; Ref issue #228
+	//typecasting below may break as MISSINGFLOAT is of type double and is 2's compliment; May not convert to anything below 64 bits.
+	//Be on guard for overflow errors
 	tdpartition* ptr = NULL;
 	int rank;
 	MPI_Comm_rank(MCW, &rank);//returns the rank of the calling processes in a communicator
@@ -64,7 +66,7 @@ tdpartition *CreateNewPartition(DATA_TYPE datatype, long totalx, long totaly, do
 		ptr->init(totalx, totaly, dxA, dyA, MPI_INT16_T, ndinit);
 	}else if(datatype == LONG_TYPE){
 		ptr = new linearpart<int32_t>;
-		int32_t ndinit = (int32_t)nodata;
+		int32_t ndinit = (int32_t)nodata; 
 		if (rank == 0) {
 			printf("Nodata value input to create partition from file: %lf\n", nodata);
 			printf("Nodata value recast to int32_t used in partition raster: %d\n", ndinit);
